@@ -57,7 +57,7 @@ handles.datapanel = uipanel('Title','Data','Position',[.85 .57 .14 .4],'Backgrou
 uicontrol(handles.datapanel,'units','normalized','Position',[.02 .9 .510 .10],'Style', 'text', 'String', 'Control Signal','FontSize',s.pref.fs,'FontWeight',s.pref.fw);
 handles.valve_channel = uicontrol(handles.datapanel,'units','normalized','Position',[.03 .68 .910 .25],'Style', 'listbox', 'String', '','FontSize',s.pref.fs,'FontWeight',s.pref.fw,'Callback',@plotValve,'Min',0,'Max',2);
 uicontrol(handles.datapanel,'units','normalized','Position',[.01 .56 .510 .10],'Style', 'text', 'String', 'Stimulus','FontSize',s.pref.fs,'FontWeight',s.pref.fw);
-handles.stim_channel = uicontrol(handles.datapanel,'units','normalized','Position',[.03 .38 .910 .20],'Style', 'listbox', 'String', '','FontSize',s.pref.fs,'FontWeight',s.pref.fw,'Callback',@s.plotStim);
+handles.stim_channel = uicontrol(handles.datapanel,'units','normalized','Position',[.03 .38 .910 .20],'Style', 'listbox', 'String', '','FontSize',s.pref.fs,'FontWeight',s.pref.fw,'Callback',@s.plotSelectedStim);
 
 uicontrol(handles.datapanel,'units','normalized','Position',[.01 .25 .610 .10],'Style', 'text', 'String', 'Response','FontSize',s.pref.fs,'FontWeight',s.pref.fw);
 handles.resp_channel = uicontrol(handles.datapanel,'units','normalized','Position',[.01 .01 .910 .25],'Style', 'listbox', 'String', '','FontSize',s.pref.fs,'FontWeight',s.pref.fw);

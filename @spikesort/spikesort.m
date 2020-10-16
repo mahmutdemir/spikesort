@@ -31,6 +31,7 @@ classdef spikesort < handle & matlab.mixin.CustomDisplay
         V_snippets % matrix of snippets around spike peaks
         time % vector of timestamps
         loc  % holds current spike times
+        ParadnTrialsIndex % number of recorded trials per paradigm [Paradigm#,#trials,index]
 
         % auxillary current data
         stimulus
@@ -173,14 +174,18 @@ classdef spikesort < handle & matlab.mixin.CustomDisplay
                 set(s.handles.ax1_B_spikes,'XData',NaN,'YData',NaN);
                 return
             else
-                
+                if s.filter_trace
                 set(s.handles.ax1_all_spikes,'XData',s.time(s.loc),'YData',s.filtered_voltage(s.loc));
+                else
+                set(s.handles.ax1_all_spikes,'XData',s.time(s.loc),'YData',s.raw_voltage(s.loc));
+                end
                 set(s.handles.ax1_all_spikes,'Marker','o','Color',s.pref.putative_spike_colour,'LineStyle','none')
 
                 % also update the YLim intelligently
                 if s.filter_trace
                     set(s.handles.ax1,'YLim',[-1.1*max(abs(s.filtered_voltage(s.loc))) 1.1*max(abs(s.filtered_voltage(s.loc)))])
                 else
+                    set(s.handles.ax1,'YLim',[-1.1*max(abs(s.raw_voltage(s.loc))) 1.1*max(abs(s.raw_voltage(s.loc)))])
                 end
             end
         end % end set loc
@@ -219,7 +224,8 @@ classdef spikesort < handle & matlab.mixin.CustomDisplay
             end
             s.this_trial = 1;
             s.handles.trial_chooser.Value = 1;
-            s.handles.paradigm_chooser.Value = s.this_paradigm;
+            thisParadInd = find(s.this_paradigm==s.ParadnTrialsIndex(:,1));
+            s.handles.paradigm_chooser.Value = thisParadInd;
         end
 
         function s = set.this_trial(s,value)

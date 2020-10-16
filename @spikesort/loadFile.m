@@ -7,6 +7,11 @@ if s.verbosity > 5
     cprintf('text',[mfilename ' called'])
 end
 
+% before clearing the current data save it
+if ~isempty(s.file_name)
+    s.saveData;
+end
+
 % reset some pushbuttons and other things
 s.clearCurrentData;
 
@@ -25,7 +30,7 @@ elseif strcmp(get(src,'String'),'<')
         return
     else
         s.saveData;
-
+        
         s.this_trial = [];
         s.this_paradigm = [];
         
@@ -36,7 +41,7 @@ elseif strcmp(get(src,'String'),'<')
         allfiles(cellfun(@(x) strcmp(x(1),'.'),{allfiles.name})) = [];
         % permute the list so that the current file is last
         allfiles = circshift({allfiles.name},[0,length(allfiles)-find(strcmp(s.file_name,{allfiles.name}))])';
-        % pick the previous one 
+        % pick the previous one
         s.file_name = allfiles{end-1};
         % figure out what the filter_index is
         filter_index = find(strcmp(['*' ext],allowed_file_extensions));
@@ -47,10 +52,10 @@ else
         return
     else
         s.saveData;
-
+        
         s.this_trial = [];
         s.this_paradigm = [];
-
+        
         % get the list of files
         [~,~,ext]=fileparts(s.file_name);
         allfiles = dir([s.path_name '*' ext]);
@@ -58,7 +63,7 @@ else
         allfiles(cellfun(@(x) strcmp(x(1),'.'),{allfiles.name})) = [];
         % permute the list so that the current file is last
         allfiles = circshift({allfiles.name},[0,length(allfiles)-find(strcmp(s.file_name,{allfiles.name}))])';
-        % pick the first one 
+        % pick the first one
         s.file_name = allfiles{1};
         % figure out what the filter_index is
         filter_index = find(strcmp(['*' ext],allowed_file_extensions));
@@ -91,8 +96,8 @@ set(s.handles.discard_control,'Enable','on');
 set(s.handles.metadata_text_control,'Enable','on')
 
 
-    
-% check to see if this file is tagged. 
+
+% check to see if this file is tagged.
 if ismac
     clear es
     es{1} = 'tag -l ';

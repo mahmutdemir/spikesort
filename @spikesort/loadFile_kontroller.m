@@ -24,8 +24,9 @@ temp = m.ControlParadigm;
 temp = {temp.Name};
 
 % only show those control paradigms that have any data in them
-paradigms_with_data = find(structureElementLength(m.data));
-s.handles.paradigm_chooser.String = temp;
+[~,s.ParadnTrialsIndex] = structureElementLength(m.data);
+paradigms_with_data = s.ParadnTrialsIndex(:,1);
+s.handles.paradigm_chooser.String = temp(paradigms_with_data);
 
 % populate some fields for the UX
 set(s.handles.valve_channel,'String',s.output_channel_names)
@@ -44,6 +45,6 @@ set(s.handles.resp_channel,'String',fl);
 % go to the first trial and paradigm with data
 s.this_trial = 1;
 s.this_paradigm  = paradigms_with_data(1);
-s.handles.paradigm_chooser.Value = paradigms_with_data(1);
+s.handles.paradigm_chooser.Value = s.ParadnTrialsIndex(1,3);
 
 
