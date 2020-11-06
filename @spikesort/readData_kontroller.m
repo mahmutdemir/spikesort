@@ -22,6 +22,7 @@ s.handles.paradigm_chooser.Enable = 'on';
 s.handles.trial_chooser.Enable = 'on';
 
 % read the voltage trace for the current file
+s.current_data = load([s.path_name s.file_name],'-mat');
 m = matfile([s.path_name s.file_name]);
 
 % read the number of paradigms we have
@@ -94,6 +95,10 @@ end
 if s.this_trial == 1
 	s.handles.prev_trial.Enable = 'off';
 end
+
+% update the discard control
+s.updateDiscardControl;
+
 
 
 

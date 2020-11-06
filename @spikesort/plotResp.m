@@ -69,7 +69,7 @@ else
 end
 
 % fix the axis
-if all(get(s.handles.ax1,'XLim') == [0 1])
+if all(get(s.handles.ax1,'XLim') == [0 1])    %||(s.handles.ax1.XLim(2)>max(s.time))
     set(s.handles.ax1,'XLim',[min(s.time) max(s.time)]);
 end
 

@@ -43,8 +43,9 @@ set(s.handles.resp_channel,'String',fl);
 
 
 % go to the first trial and paradigm with data
-s.this_trial = 1;
 s.this_paradigm  = paradigms_with_data(1);
 s.handles.paradigm_chooser.Value = s.ParadnTrialsIndex(1,3);
+% s.this_trial = 1;
+
 
 

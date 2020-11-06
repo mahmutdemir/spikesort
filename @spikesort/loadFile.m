@@ -93,6 +93,8 @@ set(s.handles.cluster_control,'Enable','on');
 set(s.handles.trial_chooser,'Enable','on');
 set(s.handles.paradigm_chooser,'Enable','on');
 set(s.handles.discard_control,'Enable','on');
+set(s.handles.discard_LFP,'Enable','on');
+set(s.handles.discard_Spikes,'Enable','on');
 set(s.handles.metadata_text_control,'Enable','on')
 
 

@@ -101,13 +101,13 @@ handles.kill_ringing_control = uicontrol(handles.spike_detection_panel,'units','
 % dimension reduction and clustering panels
 handles.dimredpanel = uipanel('Title','Dimensionality Reduction','Position',[.3 .67 .3 .07],'BackgroundColor',[1 1 1]);
 all_plugin_names = {s.installed_plugins.name};
-dim_red_plugins = all_plugin_names(find(strcmp({s.installed_plugins.plugin_type},'dim-red')));
+dim_red_plugins = all_plugin_names(strcmp({s.installed_plugins.plugin_type},'dim-red'));
 
 handles.method_control = uicontrol(handles.dimredpanel,'Style','popupmenu','String',dim_red_plugins,'units','normalized','Position',[.02 .6 .9 .2],'Callback',@s.reduceDimensionsCallback,'Enable','off','FontSize',20);
 
 % find the available methods for clustering
 all_plugin_names = {s.installed_plugins.name};
-cluster_plugins = all_plugin_names(find(strcmp({s.installed_plugins.plugin_type},'cluster')));
+cluster_plugins = all_plugin_names(strcmp({s.installed_plugins.plugin_type},'cluster'));
 
 handles.cluster_panel = uipanel('Title','Clustering','Position',[.30 .57 .3 .07],'BackgroundColor',[1 1 1]);
 handles.cluster_control = uicontrol(handles.cluster_panel,'Style','popupmenu','String',cluster_plugins,'units','normalized','Position',[.02 .6 .9 .2],'Callback',@s.clusterCallback,'Enable','off','FontSize',20);
@@ -141,7 +141,9 @@ end
 handles.redo_control = uicontrol(handles.main_fig,'units','normalized','Position',[.03 .64 .12 .05],'Style','pushbutton','String','Redo','Value',0,'Callback',@s.redo,'Enable','off');
 
 handles.sine_control = uicontrol(handles.main_fig,'units','normalized','Position',[.03 .59 .12 .05],'Style','togglebutton','String',' Kill Ringing','Value',0,'Callback',@s.plotResp,'Enable','off');
-handles.discard_control = uicontrol(handles.main_fig,'units','normalized','Position',[.16 .59 .12 .05],'Style','togglebutton','String',' Discard','Value',0,'Callback',@s.discard,'Enable','off');
+handles.discard_control = uicontrol(handles.main_fig,'units','normalized','Position',[.16 .59 .08 .05],'Style','togglebutton','String',' Discard','Value',0,'Callback',@s.setDiscardControl,'Enable','off');
+handles.discard_LFP = uicontrol(handles.main_fig,'units','normalized','Position',[.245 .618 .03 .02], 'Style', 'radiobutton', 'String', 'LFP','FontSize',s.pref.fs-5,'Value',0,'Callback',@s.setDiscardControlLFPNSpike,'Enable','off');
+handles.discard_Spikes = uicontrol(handles.main_fig,'units','normalized','Position',[.245 .593 .03 .02], 'Style', 'radiobutton', 'String', 'Spike','FontSize',s.pref.fs-5,'Value',0,'Callback',@s.setDiscardControlLFPNSpike,'Enable','off');
 
 
 % disable tagging on non unix systems
@@ -152,7 +154,7 @@ else
     % modify environment to get paths for non-matlab code right
     if ~ismac
         path1 = getenv('PATH');
-        if isempty(strfind(path1,[pathsep '/usr/local/bin']))
+        if ~contains(path1,[pathsep '/usr/local/bin'])
             path1 = [path1 pathsep '/usr/local/bin'];
         end
 

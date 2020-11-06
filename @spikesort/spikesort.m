@@ -36,6 +36,7 @@ classdef spikesort < handle & matlab.mixin.CustomDisplay
         % auxillary current data
         stimulus
         control_signals
+        current_data
         
 
         A % stores A spikes of this trace
@@ -242,9 +243,11 @@ classdef spikesort < handle & matlab.mixin.CustomDisplay
                 cprintf('text','spikesort shutting down \n')
             end
 
-            % save everything
-            s.saveData;
-
+%             % save everything if a file is loaded
+%             if ~isempty(s.file_name)
+%                 s.discardStatus = [s.handles.discard_LFP.Value, s.handles.discard_Spikes.Value];
+%                 s.saveData;
+%             end
             % try to shut down the GUI
             try
                 delete(s.handles.main_fig)
