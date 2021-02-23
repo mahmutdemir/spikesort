@@ -41,9 +41,13 @@ spikes(s.this_paradigm).A(s.this_trial,:) = 0;
 spikes(s.this_paradigm).B(s.this_trial,:) = 0;
 spikes(s.this_paradigm).N(s.this_trial,:) = 0;
 
-spikes(s.this_paradigm).B(s.this_trial,s.B) = 1;
-spikes(s.this_paradigm).A(s.this_trial,s.A) = 1;
-spikes(s.this_paradigm).N(s.this_trial,s.N) = 1;
+spikes(s.this_paradigm).B(s.this_trial,...
+    s.spikesTemp.data(s.this_paradigm).B{s.this_trial}) = 1;
+spikes(s.this_paradigm).A(s.this_trial,...
+    s.spikesTemp.data(s.this_paradigm).A{s.this_trial}) = 1;
+spikes(s.this_paradigm).N(s.this_trial,...
+    s.spikesTemp.data(s.this_paradigm).N{s.this_trial}) = 1;
+
 % perhaps LFP or
 % make sure that following code works fine
 if isfield(spikes,'discard')
@@ -72,11 +76,15 @@ end
 discardStatus = [s.handles.discard_LFP.Value, s.handles.discard_Spikes.Value];
 spikes(s.this_paradigm).discard(s.this_trial,:) = logical(discardStatus);
 
-if ~isempty(s.A)
-    spikes(s.this_paradigm).amplitudes_A(s.this_trial,s.A) = s.A_amplitude;
+if ~isempty(s.spikesTemp.data(s.this_paradigm).A{s.this_trial})
+    spikes(s.this_paradigm).amplitudes_A(s.this_trial,...
+        s.spikesTemp.data(s.this_paradigm).A{s.this_trial}) = ...
+        s.spikesTemp.data(s.this_paradigm).A_amplitude{s.this_trial};
 end
-if ~isempty(s.B)
-    spikes(s.this_paradigm).amplitudes_B(s.this_trial,s.B) = s.B_amplitude;
+if ~isempty(s.spikesTemp.data(s.this_paradigm).B{s.this_trial})
+    spikes(s.this_paradigm).amplitudes_B(s.this_trial,...
+        s.spikesTemp.data(s.this_paradigm).B{s.this_trial}) = ...
+        s.spikesTemp.data(s.this_paradigm).B_amplitude{s.this_trial};
 end
 
 save([s.path_name s.file_name],'-append','spikes')

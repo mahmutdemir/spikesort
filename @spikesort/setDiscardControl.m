@@ -15,6 +15,11 @@ else
     s.handles.discard_Spikes.Value = 0;
 end
 
+% set the time in case it is a corrupted recording
+if isempty(s.time)
+    s.time = (1:size(s.current_data.data(s.this_paradigm).spikes(s.this_trial,:),2))/s.sampling_rate;
+end
+
 % set the discard value to true if discard status is changed
 s.saveData;
 

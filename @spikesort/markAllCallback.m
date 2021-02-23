@@ -44,3 +44,5 @@ end
 
 s.A = A;
 s.B = B;
+s.spikesTemp.data(s.this_paradigm).A(s.this_trial) = {A};
+s.spikesTemp.data(s.this_paradigm).B(s.this_trial) = {B};

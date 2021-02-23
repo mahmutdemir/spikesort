@@ -36,7 +36,7 @@ if get(s.handles.mode_new_A,'Value') == 1
         [~,loc] = max(V(floor(p(1)-search_width:p(1)+search_width)));
     end
     A = [A; -search_width+loc+floor(p(1))];
-
+    
 elseif get(s.handles.mode_new_B,'Value')==1
     % snip out a small waveform around the point
     if s.pref.invert_V
@@ -45,10 +45,10 @@ elseif get(s.handles.mode_new_B,'Value')==1
         [~,loc] = max(V(floor(p(1)-search_width:p(1)+search_width)));
     end
     B = [B; -search_width+loc+floor(p(1))];
-
+    
 elseif get(s.handles.mode_delete,'Value') == 1
-    if isempty(A) & isempty(B)
-        % ok, need to remove a identified peak, not a classified spike
+    if isempty(A) && isempty(B)
+        % ok, need to remove an identified peak, not a classified spike
         loc = s.loc(:);
         dloc = (((loc-p(1))/(xrange)).^2  + ((V(loc) - p(2))/(5*yrange)).^2);
         [~,closest_spike] = min(dloc);
@@ -59,33 +59,47 @@ elseif get(s.handles.mode_delete,'Value') == 1
         % find the closest spike
         dA = (((A-p(1))/(xrange)).^2  + ((V(A) - p(2))/(5*yrange)).^2);
         dB = (((B-p(1))/(xrange)).^2  + ((V(B) - p(2))/(5*yrange)).^2);
-
+        
         dist_to_A = min(dA);
         dist_to_B = min(dB);
-        if dist_to_A < dist_to_B
-            [~,closest_spike] = min(dA);
-            A(closest_spike) = [];
-        else
+        if ~isempty(min(dA)) && ~isempty(min(dB))
+            if dist_to_A < dist_to_B
+                [~,closest_spike] = min(dA);
+                A(closest_spike) = [];
+            else
+                [~,closest_spike] = min(dB);
+                B(closest_spike) = [];
+            end
+            % there may be only one spike type
+        elseif isempty(min(dA)) && isempty(min(dB))
+            % nothing to delete
+            return
+        elseif isempty(min(dA))
             [~,closest_spike] = min(dB);
             B(closest_spike) = [];
-        end
+        elseif isempty(min(dB))
+            [~,closest_spike] = min(dA);
+            A(closest_spike) = [];
+        end  
     end
-elseif get(s.handles.mode_A2B,'Value') == 1 
-% find the closest B spike
+elseif get(s.handles.mode_A2B,'Value') == 1
+    % find the closest B spike
     dA = (((A-p(1))/(xrange)).^2  + ((V(A) - p(2))/(5*yrange)).^2);
     [~,closest_spike] = min(dA);
     B = [B; A(closest_spike)];
     A(closest_spike) = [];
-
+    
 elseif get(s.handles.mode_B2A,'Value') == 1
     % find the closest B spike
     dB = (((B-p(1))/(xrange)).^2  + ((V(B) - p(2))/(5*yrange)).^2);
     [~,closest_spike] = min(dB);
     A = [A; B(closest_spike)];
     B(closest_spike) = [];
-
+    
 end
 
 s.A = A;
 s.B = B;
+s.spikesTemp.data(s.this_paradigm).A(s.this_trial) = {A};
+s.spikesTemp.data(s.this_paradigm).B(s.this_trial) = {B};
 

@@ -45,7 +45,8 @@ if s.handles.prom_auto_control.Value
 end
 
 % find spikes if we have to...
-if isempty([s.A(:); s.B(:)]) && ~isempty(s.filtered_voltage)
+if isempty([s.spikesTemp.data(s.this_paradigm).A{s.this_trial}(:); ...
+        s.spikesTemp.data(s.this_paradigm).B{s.this_trial}(:)]) && ~isempty(s.filtered_voltage)
 	s.findSpikes;
 end
 

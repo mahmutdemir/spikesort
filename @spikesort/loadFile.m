@@ -14,6 +14,7 @@ end
 
 % reset some pushbuttons and other things
 s.clearCurrentData;
+s.spikesTemp = [];
 
 % figure out what file types we can work with
 allowed_file_extensions = setdiff(unique({s.installed_plugins.data_extension}),'n/a');

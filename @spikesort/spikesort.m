@@ -45,7 +45,9 @@ classdef spikesort < handle & matlab.mixin.CustomDisplay
         use_this_fragment
         A_amplitude
         B_amplitude
-
+        
+        % find, tsne and sort all spikes
+        spikesTemp
 
         this_trial
         this_paradigm

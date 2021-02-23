@@ -14,7 +14,7 @@ method = temp{method};
 method = str2func(method);
 
 s.handles.popup.Visible = 'on';
-s.handles.popup.String = {'','','','Reducing dimenisons...'};
+s.handles.popup.String = {'','','','Reducing dimensions...'};
 drawnow;
 
 method(s);

@@ -145,6 +145,8 @@ handles.discard_control = uicontrol(handles.main_fig,'units','normalized','Posit
 handles.discard_LFP = uicontrol(handles.main_fig,'units','normalized','Position',[.245 .618 .03 .02], 'Style', 'radiobutton', 'String', 'LFP','FontSize',s.pref.fs-5,'Value',0,'Callback',@s.setDiscardControlLFPNSpike,'Enable','off');
 handles.discard_Spikes = uicontrol(handles.main_fig,'units','normalized','Position',[.245 .593 .03 .02], 'Style', 'radiobutton', 'String', 'Spike','FontSize',s.pref.fs-5,'Value',0,'Callback',@s.setDiscardControlLFPNSpike,'Enable','off');
 
+% % Aply operations to all (sort all paradigms and trials)
+% handles.sortAll_control = uicontrol(handles.main_fig,'units','normalized','Position',[.16 .64 .12 .05],'Style','pushbutton','String','Sort All','Value',1,'Callback',@s.sortAll,'Enable','off');
 
 % disable tagging on non unix systems
 if ispc

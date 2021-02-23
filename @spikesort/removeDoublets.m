@@ -1,5 +1,6 @@
 function removeDoublets(s)
 
+
 if s.verbosity > 5
     cprintf('green','\n[INFO] ')
     cprintf('text',[mfilename ' called'])
@@ -13,8 +14,6 @@ end
 
 % remove B doublets and assign one of them to A
 % get the refractory time 
-
-
 B = s.B;
 A = s.A;
 
@@ -72,3 +71,7 @@ end
 
 s.A = A;
 s.B = B;
+% update local container as well
+s.spikesTemp.data(s.this_paradigm).A(s.this_trial) = {A};
+s.spikesTemp.data(s.this_paradigm).B(s.this_trial) = {B};
+

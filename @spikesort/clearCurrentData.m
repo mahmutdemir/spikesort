@@ -25,3 +25,5 @@ s.loc  = [];% holds current spike times
 s.stimulus = [];
 s.control_signals = [];
 
+% s.spikesTemp = [];
+

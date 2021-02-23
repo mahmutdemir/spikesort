@@ -37,5 +37,5 @@ if nargout
 	varargout{1} = R;
 else
 	% it's being called a dim red tool
-	s.R = R;
+	s.spikesTemp.data(s.this_paradigm).R(s.this_trial) = {R};
 end

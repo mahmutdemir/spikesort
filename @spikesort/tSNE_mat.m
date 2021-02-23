@@ -14,4 +14,6 @@ if s.verbosity > 5
     cprintf('text',[mfilename ' called'])
 end
 
-s.R = tsne(s.V_snippets')';
+s.R = tsne(s.spikesTemp.data(s.this_paradigm).V_snippets{s.this_trial}')';
+% update the local container
+s.spikesTemp.data(s.this_paradigm).R(s.this_trial) = {s.R};

@@ -7,8 +7,12 @@ if s.verbosity > 5
 end
 
 % compute spike amplitudes for this trial
-s.A_amplitude = s.spikeAmplitudes(s.filtered_voltage,s.A);
-s.B_amplitude = s.spikeAmplitudes(s.filtered_voltage,s.B);
+if ~isempty(s.spikesTemp) % otherwise no spike is sorted yet
+    s.spikesTemp.data(s.this_paradigm).A_amplitude(s.this_trial) = ...
+        {s.spikeAmplitudes(s.filtered_voltage,s.spikesTemp.data(s.this_paradigm).A{s.this_trial})};
+    s.spikesTemp.data(s.this_paradigm).B_amplitude(s.this_trial) = ...
+        {s.spikeAmplitudes(s.filtered_voltage,s.spikesTemp.data(s.this_paradigm).B{s.this_trial})};
+end
 
 % figure out which plugin to use to save data
 [~,~,chosen_data_ext] = fileparts(s.file_name);

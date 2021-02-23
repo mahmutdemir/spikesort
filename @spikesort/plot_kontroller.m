@@ -20,7 +20,7 @@ if strcmp(plot_type,'raster')
 
 	for i = 1:length(spikes)
 	    if length(spikes(i).A) > 1
-	        raster2(spikes(i).A,spikes(i).B,'yoffset',yoffset,'deltat',s.pref.deltat);
+	        raster(spikes(i).A,spikes(i).B,'yoffset',yoffset,'deltat',s.pref.deltat);
 	        yoffset = yoffset + width(spikes(i).A)*2 + 1;
 	        ytick = [ytick yoffset];
 	        L = [L strrep(ControlParadigm(i).Name,'_','-')];
@@ -81,7 +81,7 @@ elseif strcmp(plot_type,'firing_rate')
 
 	        % do A
 	        time = (1:length(spikes(haz_data(i)).A))/SamplingRate;
-	        [fA,tA] = spiketimes2f(spikes(haz_data(i)).A,time,pref.firing_rate_dt,pref.firing_rate_window_size);
+	        [fA,tA] = spiketimes2f_1(spikes(haz_data(i)).A,time,pref.firing_rate_dt,pref.firing_rate_window_size);
 	        tA = tA(:);
 	        % remove trials with no spikes
 	        fA(:,sum(fA) == 0) = [];
@@ -136,7 +136,7 @@ elseif strcmp(plot_type,'firing_rate')
 
 	        % do B    
 	        time = (1:length(spikes(haz_data(i)).B))/SamplingRate;
-	        [fB,tB] = spiketimes2f(spikes(haz_data(i)).B,time);
+	        [fB,tB] = spiketimes2f_1(spikes(haz_data(i)).B,time);
 	        tB = tB(:);
 	        % remove trials with no spikes
 	        fB(:,sum(fB) == 0) = [];
@@ -196,13 +196,20 @@ elseif strcmp(plot_type,'LFP')
 	xlabel('Time (s)')
 
 	fn = fieldnames(data); fn = fn{1};
-	haz_data = (cellfun(@(x) length(x),{data.(fn)})) > 0;
 
+    spikes = m.spikes; 
+    haz_data = [];
+	for i = 1:length(spikes)
+	    if length(spikes(i).A) > 1
+	        haz_data = [haz_data i];
+	    end
+	end
 	if length(haz_data) == 1
 	    c = [0 0 0];
 	else
 	    c = parula(length(haz_data)+1);
 	end
+
 	L = {};
 	for i = length(haz_data):-1:1
 	    if haz_data(i)
@@ -241,8 +248,13 @@ elseif strcmp(plot_type,'stimulus')
 	xlabel('Time (s)')
 
 	fn = fieldnames(data); fn = fn{1};
-	haz_data = (cellfun(@(x) length(x),{data.(fn)})) > 0;
-
+    spikes = m.spikes; 
+    haz_data = [];
+	for i = 1:length(spikes)
+	    if length(spikes(i).A) > 1
+	        haz_data = [haz_data i];
+	    end
+	end
 	if length(haz_data) == 1
 	    c = [0 0 0];
 	else
@@ -251,7 +263,7 @@ elseif strcmp(plot_type,'stimulus')
 	L = {};
 	for i = length(haz_data):-1:1
 	    if haz_data(i)
-	    	X = data(i).(s.pref.stimulus_channel_name)';
+	    	X = data(haz_data(i)).(s.pref.stimulus_channel_name)';
 	    	for j = 1:size(X,2)
 	    		X(:,j) = X(:,j) - X(1,j);
 	    	end
@@ -268,7 +280,7 @@ elseif strcmp(plot_type,'stimulus')
 	    else
 	    	l(i) = plot(NaN,NaN,'Color',c(i,:));
 	    end
-	    L{i} = strrep(ControlParadigm(i).Name,'_','-');
+	    L{i} = strrep(ControlParadigm(haz_data(i)).Name,'_','-');
 	end
 	legend(l,L)
 	prettyFig('font_units','points');
