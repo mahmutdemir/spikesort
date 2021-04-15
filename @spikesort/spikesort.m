@@ -37,8 +37,8 @@ classdef spikesort < handle & matlab.mixin.CustomDisplay
         stimulus
         control_signals
         current_data
+        dataLoaded
         
-
         A % stores A spikes of this trace
         B % stores B spikes of this trace
         N % stores identified noise in this trace
@@ -48,7 +48,7 @@ classdef spikesort < handle & matlab.mixin.CustomDisplay
         
         % find, tsne and sort all spikes
         spikesTemp
-
+ 
         this_trial
         this_paradigm
 

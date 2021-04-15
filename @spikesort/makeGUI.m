@@ -64,9 +64,11 @@ handles.resp_channel = uicontrol(handles.datapanel,'units','normalized','Positio
 
 
 % file I/O
-uicontrol(handles.main_fig,'units','normalized','Position',[.10 .92 .09 .07],'Style', 'pushbutton', 'String', 'Load File','FontSize',s.pref.fs,'FontWeight',s.pref.fw,'callback',@s.loadFile);
-uicontrol(handles.main_fig,'units','normalized','Position',[.05 .93 .03 .05],'Style', 'pushbutton', 'String', '<','FontSize',s.pref.fs,'FontWeight',s.pref.fw,'callback',@s.loadFile);
-uicontrol(handles.main_fig,'units','normalized','Position',[.21 .93 .03 .05],'Style', 'pushbutton', 'String', '>','FontSize',s.pref.fs,'FontWeight',s.pref.fw,'callback',@s.loadFile);
+uicontrol(handles.main_fig,'units','normalized','Position',[.08 .92 .09 .07],'Style', 'pushbutton', 'String', 'Load File','FontSize',s.pref.fs,'FontWeight',s.pref.fw,'callback',@s.loadFile);
+uicontrol(handles.main_fig,'units','normalized','Position',[.04 .93 .03 .05],'Style', 'pushbutton', 'String', '<','FontSize',s.pref.fs,'FontWeight',s.pref.fw,'callback',@s.loadFile);
+uicontrol(handles.main_fig,'units','normalized','Position',[.18 .93 .03 .05],'Style', 'pushbutton', 'String', '>','FontSize',s.pref.fs,'FontWeight',s.pref.fw,'callback',@s.loadFile);
+handles.fileSave_button = uicontrol(handles.main_fig,'units','normalized','Position',[.25 .94 .03 .03],'Style','togglebutton','String',' save','Value',0,'Callback',@s.saveData,'Enable','off');
+handles.fileSave_radio = uicontrol(handles.main_fig,'units','normalized','Position',[.225 .94 .024 .03], 'Style', 'radiobutton', 'String', 'auto','FontSize',s.pref.fs-5,'Value',0,'Callback',@s.setAutoSave,'Enable','off');
 
 % paradigms and trials
 handles.datachooserpanel = uipanel('Title','Paradigms and Trials','Position',[.03 .75 .25 .16],'BackgroundColor',[1 1 1]);

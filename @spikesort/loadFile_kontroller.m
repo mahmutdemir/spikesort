@@ -9,6 +9,13 @@ if s.verbosity > 5
     cprintf('text',[mfilename ' called'])
 end
 
+s.dataLoaded = 0;
+
+if ~s.dataLoaded
+% read the voltage trace for the current file
+s.current_data = load([s.path_name s.file_name],'-mat');
+s.dataLoaded = 1;
+end
 % read the file
 m = matfile([s.path_name s.file_name]);
 
@@ -46,6 +53,12 @@ set(s.handles.resp_channel,'String',fl);
 s.this_paradigm  = paradigms_with_data(1);
 s.handles.paradigm_chooser.Value = s.ParadnTrialsIndex(1,3);
 % s.this_trial = 1;
+
+% set the data read and save manual
+s.handles.fileSave_button.Value = 1;
+s.handles.fileSave_button.Enable = 'on';
+s.handles.fileSave_radio.Value = 0;
+s.handles.fileSave_radio.Enable = 'on';
 
 
 

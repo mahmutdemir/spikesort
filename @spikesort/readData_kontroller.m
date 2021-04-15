@@ -21,110 +21,130 @@ s.handles.prev_paradigm.Enable = 'on';
 s.handles.paradigm_chooser.Enable = 'on';
 s.handles.trial_chooser.Enable = 'on';
 
-% read the voltage trace for the current file
-s.current_data = load([s.path_name s.file_name],'-mat');
-m = matfile([s.path_name s.file_name]);
-
-% read the number of paradigms we have
-nparadigms = length(m.data);
-
-if s.this_paradigm == nparadigms
-    s.handles.next_paradigm.Enable = 'off';
+if ~s.handles.fileSave_radio.Value
+    if ~s.dataLoaded
+        % read the voltage trace for the current file
+        s.current_data = load([s.path_name s.file_name],'-mat');
+        s.dataLoaded = 1;
+    end
+    m = s.current_data;
+else
+    % create m file
+    m = matfile([s.path_name s.file_name]);
 end
-if s.this_paradigm == 1
-    s.handles.prev_paradigm.Enable = 'off';
-end
-
-if s.this_paradigm > size(m.data,2)
-    % abort, no data for this paradigm
-    s.raw_voltage = [];
-    s.stimulus = [];
-    set(s.handles.ax1_data,'XData',NaN,'YData',NaN);
-    set(s.handles.ax2_data,'XData',NaN,'YData',NaN);
-    s.handles.prev_trial.Enable = 'off';
-    s.handles.next_trial.Enable = 'off';
-    s.handles.trial_chooser.Enable = 'off';
-    return
-end
-
-this_data = m.data(1,s.this_paradigm);
-if isempty(this_data.(s.pref.ephys_channel_name))
-    % abort, no data for this trial (how did we even get here?)
-    s.raw_voltage = [];
-    s.stimulus = [];
-    set(s.handles.ax1_data,'XData',NaN,'YData',NaN);
-    set(s.handles.ax2_data,'XData',NaN,'YData',NaN);
-    return
-end
-
-
-s.raw_voltage = this_data.(s.pref.ephys_channel_name)(s.this_trial,:);
-
-
-% read the stimulus trace for the current file for the current trial
-s.stimulus = this_data.(s.pref.stimulus_channel_name)(s.this_trial,:);
-
-% if container is empty initiate it
-if isempty(s.spikesTemp)
-    s.initiateLocalSpikesContainer;
-end
-
-% is this already sorted?
-if any(strcmp('spikes',who(m)))
-    try
-        this_spikes = m.spikes(1,s.this_paradigm);
-        allSavedSpikes = [find(this_spikes.A(s.this_trial,:)),...
-            find(this_spikes.B(s.this_trial,:))];
-        
-        
-        try
-            allLocalSpikes = [s.spikesTemp.data(s.this_paradigm).A{s.this_trial}(:);...
-                s.spikesTemp.data(s.this_paradigm).B{s.this_trial}(:)];
-        catch
-            allLocalSpikes = [];
+    
+    % read the number of paradigms we have
+    nparadigms = length(m.data);
+    
+    if s.this_paradigm == nparadigms
+        s.handles.next_paradigm.Enable = 'off';
+    end
+    if s.this_paradigm == 1
+        s.handles.prev_paradigm.Enable = 'off';
+    end
+    
+    if s.this_paradigm > size(m.data,2)
+        % abort, no data for this paradigm
+        s.raw_voltage = [];
+        s.stimulus = [];
+        set(s.handles.ax1_data,'XData',NaN,'YData',NaN);
+        set(s.handles.ax2_data,'XData',NaN,'YData',NaN);
+        s.handles.prev_trial.Enable = 'off';
+        s.handles.next_trial.Enable = 'off';
+        s.handles.trial_chooser.Enable = 'off';
+        return
+    end
+    
+    this_data = m.data(1,s.this_paradigm);
+    if isempty(this_data.(s.pref.ephys_channel_name))
+        % abort, no data for this trial (how did we even get here?)
+        s.raw_voltage = [];
+        s.stimulus = [];
+        set(s.handles.ax1_data,'XData',NaN,'YData',NaN);
+        set(s.handles.ax2_data,'XData',NaN,'YData',NaN);
+        return
+    end
+    
+    
+    s.raw_voltage = this_data.(s.pref.ephys_channel_name)(s.this_trial,:);
+    
+    
+    % read the stimulus trace for the current file for the current trial
+    s.stimulus = this_data.(s.pref.stimulus_channel_name)(s.this_trial,:);
+    
+    % if container is empty initiate it
+    if isempty(s.spikesTemp)
+        s.initiateLocalSpikesContainer;
+    end
+    
+    % is this already sorted?
+    % is spikes a variable
+    spikesVar = 0;
+    if isstruct(m)
+        if any(strcmp('spikes',fieldnames(m)))
+            spikesVar = 1;
         end
-        if ~isempty(allSavedSpikes) && isempty(allLocalSpikes)
-            s.spikesTemp.data(s.this_paradigm).A(s.this_trial) = {find(this_spikes.A(s.this_trial,:))};
-            s.spikesTemp.data(s.this_paradigm).B(s.this_trial) = {find(this_spikes.B(s.this_trial,:))};
-            s.spikesTemp.data(s.this_paradigm).N(s.this_trial) = {find(this_spikes.N(s.this_trial,:))};
-            % update spikes as well
-            s.A = find(this_spikes.A(s.this_trial,:));
-            s.B = find(this_spikes.B(s.this_trial,:));
-            s.N = find(this_spikes.N(s.this_trial,:));
-            
-        elseif isempty(allSavedSpikes) && ~isempty(allLocalSpikes )
-            s.A = s.spikesTemp.data(s.this_paradigm).A{s.this_trial};
-            s.B = s.spikesTemp.data(s.this_paradigm).B{s.this_trial};
-            s.N = s.spikesTemp.data(s.this_paradigm).N{s.this_trial};
-        else
-            % decide which one to use
-            s.A = s.spikesTemp.data(s.this_paradigm).A{s.this_trial};
-            s.B = s.spikesTemp.data(s.this_paradigm).B{s.this_trial};
-            s.N = s.spikesTemp.data(s.this_paradigm).N{s.this_trial};
-        end
-    catch
-        % use local data
-        % if notr created just do so
-        if ~isfield(s.spikesTemp,'data')
-            % initiate local spikes structure
-            s.initiateLocalSpikesContainer;
-            % update the spikes
-            s.A = [];
-            s.B = [];
-            s.N = [];
-        elseif ~isfield(s.spikesTemp.data,'A')
-            s.initiateLocalSpikesContainer;
-            % update the spikes
-            s.A = [];
-            s.B = [];
-            s.N = [];
-        else
-            s.A = s.spikesTemp.data(s.this_paradigm).A{s.this_trial};
-            s.B = s.spikesTemp.data(s.this_paradigm).B{s.this_trial};
-            s.N = s.spikesTemp.data(s.this_paradigm).N{s.this_trial};
+    else
+        if any(strcmp('spikes',who(m)))
+            spikesVar = 1;
         end
     end
-end
+    if spikesVar
+        try
+            this_spikes = m.spikes(1,s.this_paradigm);
+            allSavedSpikes = [find(this_spikes.A(s.this_trial,:)),...
+                find(this_spikes.B(s.this_trial,:))];
+            
+            
+            try
+                allLocalSpikes = [s.spikesTemp.data(s.this_paradigm).A{s.this_trial}(:);...
+                    s.spikesTemp.data(s.this_paradigm).B{s.this_trial}(:)];
+            catch
+                allLocalSpikes = [];
+            end
+            if ~isempty(allSavedSpikes) && isempty(allLocalSpikes)
+                s.spikesTemp.data(s.this_paradigm).A(s.this_trial) = {find(this_spikes.A(s.this_trial,:))};
+                s.spikesTemp.data(s.this_paradigm).B(s.this_trial) = {find(this_spikes.B(s.this_trial,:))};
+                s.spikesTemp.data(s.this_paradigm).N(s.this_trial) = {find(this_spikes.N(s.this_trial,:))};
+                % update spikes as well
+                s.A = find(this_spikes.A(s.this_trial,:));
+                s.B = find(this_spikes.B(s.this_trial,:));
+                s.N = find(this_spikes.N(s.this_trial,:));
+                
+            elseif isempty(allSavedSpikes) && ~isempty(allLocalSpikes )
+                s.A = s.spikesTemp.data(s.this_paradigm).A{s.this_trial};
+                s.B = s.spikesTemp.data(s.this_paradigm).B{s.this_trial};
+                s.N = s.spikesTemp.data(s.this_paradigm).N{s.this_trial};
+            else
+                % decide which one to use
+                s.A = s.spikesTemp.data(s.this_paradigm).A{s.this_trial};
+                s.B = s.spikesTemp.data(s.this_paradigm).B{s.this_trial};
+                s.N = s.spikesTemp.data(s.this_paradigm).N{s.this_trial};
+            end
+        catch
+            % use local data
+            % if notr created just do so
+            if ~isfield(s.spikesTemp,'data')
+                % initiate local spikes structure
+                s.initiateLocalSpikesContainer;
+                % update the spikes
+                s.A = [];
+                s.B = [];
+                s.N = [];
+            elseif ~isfield(s.spikesTemp.data,'A')
+                s.initiateLocalSpikesContainer;
+                % update the spikes
+                s.A = [];
+                s.B = [];
+                s.N = [];
+            else
+                s.A = s.spikesTemp.data(s.this_paradigm).A{s.this_trial};
+                s.B = s.spikesTemp.data(s.this_paradigm).B{s.this_trial};
+                s.N = s.spikesTemp.data(s.this_paradigm).N{s.this_trial};
+            end
+        end
+    end
+
 
 % update the trial chooser with the number of trials we have in this paradigm
 ntrials = size(this_data.(s.pref.ephys_channel_name),1);
