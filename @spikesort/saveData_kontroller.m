@@ -16,7 +16,6 @@ if isempty(s.time)
 end
 
 if ~s.handles.fileSave_radio.Value
-    s.handles.fileSave_button.Enable = 'off';
     if any(strcmp('spikes',fieldnames(s.current_data)))
         spikes = s.current_data.spikes;
     else
@@ -115,9 +114,10 @@ end
 s.current_data.spikes = spikes;
 
 if ~s.handles.fileSave_radio.Value
-    if strcmp(s.handles.fileSave_button.Enable,'off')
+    if strcmp(s.handles.fileSave_button.Enable,'off')&&(s.handles.fileSave_button.Value == 1)
         save([s.path_name s.file_name],'-append','spikes')
         s.handles.fileSave_button.Enable = 'on';
+        s.handles.fileSave_button.Value = 0;
     end
 else
     save([s.path_name s.file_name],'-append','spikes')

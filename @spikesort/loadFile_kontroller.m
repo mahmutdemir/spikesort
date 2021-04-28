@@ -55,7 +55,7 @@ s.handles.paradigm_chooser.Value = s.ParadnTrialsIndex(1,3);
 % s.this_trial = 1;
 
 % set the data read and save manual
-s.handles.fileSave_button.Value = 1;
+s.handles.fileSave_button.Value = 0;
 s.handles.fileSave_button.Enable = 'on';
 s.handles.fileSave_radio.Value = 0;
 s.handles.fileSave_radio.Enable = 'on';

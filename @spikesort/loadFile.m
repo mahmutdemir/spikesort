@@ -9,6 +9,8 @@ end
 
 % before clearing the current data save it
 if ~isempty(s.file_name)
+    s.handles.fileSave_button.Value = 1;
+    s.handles.fileSave_button.Enable = 'off';
     s.saveData;
 end
 
